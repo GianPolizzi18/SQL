@@ -61,6 +61,35 @@ FROM item_ventas IV, productos P
 WHERE IV.cod_producto=P.cod_producto;
 
 /*2)                */
-SELECT SUM(cantidad) AS total_vendido
+SELECT SUM(cantidad) AS "Unidades Vendidas producto C"
 FROM item_ventas IV
 WHERE IV.cod_producto = 102;
+
+/*3)                */
+SELECT P.nombre_producto, SUM(IV.cantidad) AS total_unidades
+FROM item_ventas IV
+JOIN productos P ON IV.cod_producto = P.cod_producto
+GROUP BY p.nombre_producto
+ORDER BY total_unidades DESC;
+
+/*4)                */
+SELECT P.nombre_producto, SUM(IV.cantidad) AS "Ventas mas de 30U"
+FROM item_ventas IV
+JOIN productos P ON IV.cod_producto = P.cod_producto
+GROUP BY P.nombre_producto
+HAVING SUM(IV.cantidad) > 30
+ORDER BY P.nombre_producto ASC;
+
+/*5)                */
+SELECT C.cod_cliente, C.nombre, COUNT(V.num_factura) AS compras
+FROM ventas V
+JOIN clientes C ON V.cod_cliente = V.cod_cliente
+GROUP BY C.cod_cliente, C.nombre
+ORDER BY compras DESC;
+
+/*6)                */
+SELECT IV.cod_producto, AVG(IV.cantidad) AS "Promedio Productos CLiente 1"
+FROM item_ventas IV
+JOIN ventas V ON IV.num_factura = V.num_factura
+WHERE V.cod_cliente = 1
+GROUP BY IV.cod_producto;
